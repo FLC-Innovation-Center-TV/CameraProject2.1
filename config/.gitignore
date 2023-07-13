@@ -1,0 +1,27 @@
+# Ignore images and videos
+*.jpg
+*.mp4
+*.ts
+
+# Ignore Python compiled files
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Ignore log files
+*.log
+logs/
+
+# Ignore the console error log
+console-error-logs.txt
+
+# Ignore secret files
+client_secret_*.json
+credentials.ini
+
+# Ignore scripts (if you don't want to upload them to GitHub)
+# flaskserver.py
+# pimonitoring.py
+# emailnotifs.py
+# (add more as needed)
