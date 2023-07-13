@@ -1,156 +1,89 @@
-# from threading import Thread
-# import pimonitoring
-# from emailnotifs import send_email_notification
+# livestream libraries 
+import time
+from picamera2.outputs import FfmpegOutput
+from picamera2.encoders import H264Encoder, Quality
+from picamera2 import Picamera2
 
-# # Create a thread to run the log_health_data function
-# log_health_data_thread = Thread(target=pimonitoring.log_health_data)
-
-# # Start the thread
-# log_health_data_thread.start()
-
-# # Now your main.py script will continue to run while the log_health_data function runs in the background
-# # Insert the rest of your main.py code here
-# import smtplib
-# import configparser
-# import psutil
-# import os
-# import time
-# from datetime import datetime
-# from gpiozero import CPUTemperature
-# from email.mime.multipart import MIMEMultipart
-# from email.mime.text import MIMEText
-
-# # Load the configuration file
-# config = configparser.ConfigParser()
-# config.read('credentials.ini')
-
-# imagestoragepath = 'logs'
-
-# def send_email_notification(subject, body, to_address):
-#     """
-#     Function to send an email notification.
-#     """
-#     from_address = config.get('credentials', 'email')
-#     from_password = config.get('credentials', 'password')
-
-#     # Setup the email
-#     msg = MIMEMultipart()
-#     msg['From'] = from_address
-#     msg['To'] = to_address
-#     msg['Subject'] = subject
-#     msg.attach(MIMEText(body, 'plain'))
-
-#     # Send the email
-#     try:
-#         server = smtplib.SMTP('smtp.gmail.com', 587)
-#         server.starttls()
-#         server.login(from_address, from_password)
-#         text = msg.as_string()
-#         server.sendmail(from_address, to_address, text)
-#         server.quit()
-#         print("Email sent successfully")
-#     except Exception as e:
-#         print(f"Error occurred while sending email: {str(e)}")
-
-
-# def get_cpu_health():
-#     """
-#     Function to get CPU health data.
-#     """
-#     # Get CPU usage percentage
-#     cpu_usage = psutil.cpu_percent(interval=1)
-
-#     # Get CPU core temperature (gpiozero library supports this for Raspberry Pi)
-#     cpu_temp = CPUTemperature().temperature
-
-#     return {'cpu_usage': cpu_usage, 'cpu_temp': cpu_temp}
-
-
-# def get_network_health():
-#     """
-#     Function to get network health data.
-#     """
-#     # Get network stats
-#     net_io_stats = psutil.net_io_counters()
-
-#     # Extract desired stats
-#     sent_bytes = net_io_stats.bytes_sent
-#     recv_bytes = net_io_stats.bytes_recv
-
-#     return {'sent_bytes': sent_bytes, 'recv_bytes': recv_bytes}
-
-
-# def log_health_data():
-#     """
-#     Function to log health data.
-#     """
-#     while True:
-#         try:
-#             # Get health data
-#             cpu_health = get_cpu_health()
-#             network_health = get_network_health()
-
-#             # Create timestamp
-#             timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
-
-#             # Create directory if it doesn't exist
-#             os.makedirs(imagestoragepath, exist_ok=True)
-
-#             # Define log file path
-#             log_file = os.path.join(imagestoragepath, f"{timestamp}_health_log.txt")
-
-#             # Write health data to log file
-#             with open(log_file, 'w') as f:
-#                 f.write(f"Timestamp: {timestamp}\n")
-#                 f.write(f"CPU Usage: {cpu_health['cpu_usage']}%\n")
-#                 f.write(f"CPU Temperature: {cpu_health['cpu_temp']}°C\n")
-#                 f.write(f"Bytes Sent: {network_health['sent_bytes']}\n")
-#                 f.write(f"Bytes Received: {network_health['recv_bytes']}\n")
-
-#         except Exception as e:
-#             print(f"An error occurred: {str(e)}")
-#             send_email_notification("Health Log Error", f"An error occurred: {str(e)}", "youralertemail@gmail.com")
-
-#         finally:
-#             # Wait for the next log, even if an error occurred
-#             time.sleep(5)  # Log every 60 seconds
-
-# def main():
-#     """
-#     Main function to run the health data logger.
-#     """
-#     log_health_data()
-
-# if __name__ == '__main__':
-#     main()
+# timelapse libraries 
 import os
-import google_auth_oauthlib.flow
-import googleapiclient.discovery
-import googleapiclient.errors
+import time
+from datetime import datetime
+from picamera2 import Picamera2
 
-scopes = ["https://www.googleapis.com/auth/youtube.readonly"]
+# Define sizes for common displays
+display_sizes = {
+    "480p": (640, 480),
+    "720p": (1280, 720),
+    "1080p": (1920, 1080),
+    "1440p": (2560, 1440),
+    "4K": (3840, 2160)
+}
 
-def main():
-    #Disable OAuthlib's HTTPS verification when running locally.
-    #*DO NOT* leave this option enabled in production.
-    os.environ["OAUTHLIB_INSECURE_TRANSPORT"] = "1"
+# You can then choose a size from this dictionary for your video configuration
+chosen_display = "1080p"  # The "p" in these names stands for "progressive scan", and the number refers to the vertical resolution (the number of pixels in each column).
+video_size = display_sizes[chosen_display]
 
-    api_service_name = "youtube"
-    api_version = "v3"
-    client_secrets_file = "/home/pi/Desktop/ColinsLivestreamRewriteStarted062623/client_secret_993425110504-nr8fhtpievmrld10kv5bfj7dnu36j1op.apps.googleusercontent.com.json"
+def create_ffmpeg_command(stream_key):
+    # This command will push a live stream to the specified YouTube RTMP URL
+    return "-f flv rtmp://x.rtmp.youtube.com/live2/{}".format(stream_key)
 
-    # Get credentials and create an API client
-    flow = google_auth_oauthlib.flow.InstalledAppFlow.from_client_secrets_file(client_secrets_file, scopes)
-    credentials = flow.run_console()
-    youtube = googleapiclient.discovery.build(api_service_name, api_version, credentials=credentials)
+stream_key = "dktr-20au-bqkh-3gac-cy62" # remove this and put it in the config folder 
+ffmpeg_cmd = create_ffmpeg_command(stream_key)
 
-    request = youtube.liveStreams().list(
-        part="snippet,cdn,contentDetails,status",
-        mine=True
-    )
-    response = request.execute()
+picam2 = Picamera2()
+picam2.configure(picam2.create_video_configuration(main={"size": video_size}))
+encoder = H264Encoder(bitrate=4500000, repeat=True, iperiod=40)
 
-    print(response)
+# Creating FfmpegOutput instance with the specified command and audio parameters
+output = FfmpegOutput(ffmpeg_cmd, audio=True, audio_device="default", audio_sync=-0.3, audio_samplerate=48000, audio_codec="aac", audio_bitrate=128000)
 
+# Define the path to store the images
+imagestoragepath = '/home/pi/Desktop/timelapsestorage'
+
+def save_image(imagestoragepath):
+    """
+    Function to save image in the save directory with a timestamp.
+    """
+    # Use datetime to get current year, month, and day
+    now = datetime.now()
+    year, month, day = now.strftime('%Y'), now.strftime('%m'), now.strftime('%d')
+
+    # Append year, month, and day to your image storage path
+    save_directory = os.path.join(imagestoragepath, year, month, day)
+
+    # Create directory if it doesn't exist
+    os.makedirs(save_directory, exist_ok=True)
+    
+    timestamp = now.strftime('%Y%m%d_%H%M%S')  # e.g., '20230627_142536'
+    file_name = f"{timestamp}.jpg"
+    file_path = os.path.join(save_directory, file_name)
+    
+    # Capture and save image directly
+    request = picam2.capture_request()
+    request.save("main", file_path)
+    request.release()
+
+    return file_path
+
+def take_timelapse(interval, duration, imagestoragepath):
+    """
+    Function to capture images at regular intervals.
+    """
+    # Determine end time based on current time and duration
+    end_time = time.time() + duration
+
+    while time.time() < end_time:
+        # Capture and save image
+        save_image(imagestoragepath)
+
+        # Wait for the next capture
+        time.sleep(interval)
+
+# Usage
 if __name__ == "__main__":
-    main()
+    picam2.start_recording(encoder, output)
+    time.sleep(10)
+
+    take_timelapse(interval=15, duration=60*30, imagestoragepath=imagestoragepath)
+
+    time.sleep(9999999)
