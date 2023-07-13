@@ -1,0 +1,12 @@
+{"level": "INFO", "time": "2023-07-12 20:47:03,672", "message": "{'Display Size': '1080p', 'Video Size': (1920, 1080)}"}
+{"level": "INFO", "time": "2023-07-12 20:47:03,815", "message": "{'Encoder Bitrate': 4500000, 'Repeat': True, 'IPeriod': 40}"}
+{"level": "INFO", "time": "2023-07-12 20:47:03,816", "message": "{'FFmpeg Command': '-f flv rtmp://x.rtmp.youtube.com/live2/dktr-20au-bqkh-3gac-cy62', 'Audio Device': 'default', 'Audio Sync': -0.3, 'Audio Sample Rate': 48000, 'Audio Codec': 'aac', 'Audio Bitrate': 128000}"}
+{"level": "INFO", "time": "2023-07-12 20:47:05,514", "message": "{'cpu_usage': 90.4, 'memory_usage': 90.9, 'disk_usage': 14.3, 'sent_bytes': 41562516922, 'recv_bytes': 1171060696}"}
+{"level": "INFO", "time": "2023-07-12 20:47:11,543", "message": "{'cpu_usage': 92.7, 'memory_usage': 89.8, 'disk_usage': 14.3, 'sent_bytes': 41566292882, 'recv_bytes': 1171160803}"}
+{"level": "INFO", "time": "2023-07-12 20:47:17,551", "message": "{'cpu_usage': 85.4, 'memory_usage': 90.3, 'disk_usage': 14.3, 'sent_bytes': 41570052228, 'recv_bytes': 1171248517}"}
+{"level": "INFO", "time": "2023-07-12 20:47:23,561", "message": "{'cpu_usage': 55.9, 'memory_usage': 89.9, 'disk_usage': 14.3, 'sent_bytes': 41573694999, 'recv_bytes': 1171336049}"}
+{"level": "INFO", "time": "2023-07-12 20:47:29,569", "message": "{'cpu_usage': 10.4, 'memory_usage': 88.8, 'disk_usage': 14.3, 'sent_bytes': 41577380712, 'recv_bytes': 1171420415}"}
+{"level": "INFO", "time": "2023-07-12 20:47:35,581", "message": "{'cpu_usage': 16.1, 'memory_usage': 88.8, 'disk_usage': 14.3, 'sent_bytes': 41580948333, 'recv_bytes': 1171498722}"}
+{"level": "INFO", "time": "2023-07-12 20:47:41,591", "message": "{'cpu_usage': 14.8, 'memory_usage': 88.8, 'disk_usage': 14.3, 'sent_bytes': 41584608332, 'recv_bytes': 1171584575}"}
+{"level": "INFO", "time": "2023-07-12 20:47:47,601", "message": "{'cpu_usage': 14.6, 'memory_usage': 88.8, 'disk_usage': 14.3, 'sent_bytes': 41588180980, 'recv_bytes': 1171667023}"}
+{"level": "INFO", "time": "2023-07-12 20:47:53,612", "message": "{'cpu_usage': 63.4, 'memory_usage': 88.8, 'disk_usage': 14.3, 'sent_bytes': 41591824842, 'recv_bytes': 1171752824}"}
