@@ -17,6 +17,6 @@ dest_path = "/mnt/c/Users/flcin/Documents"
 
 send_files_with_rsync(src_path, beelink_username, beelink_ip , dest_path)
 
-picam123
-tract0rSpy2.1
-tract0
+# picam123
+# tract0rSpy2.1
+# tract0
