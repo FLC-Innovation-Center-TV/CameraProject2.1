@@ -161,7 +161,7 @@ if __name__ == "__main__":
         # Start logging in a separate thread
         threading.Thread(target=log_system_health, daemon=True).start()
         
-        take_timelapse(interval=60, duration=60*30, imagestoragepath=imagestoragepath)
+        take_timelapse(interval=60, duration=60*60*24*3, imagestoragepath=imagestoragepath)
 
         # Keep the script running
         while True:
