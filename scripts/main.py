@@ -150,11 +150,6 @@ class Camera:
             """
             Transfer all files from the specified directory and its subdirectories to a remote server.
             """
-
-
-            # bee_host = "10.54.0.210"
-            # bee_username = "picam"
-            # bee_password = "tract0rSpy2.1"
             destination = r"C:\Users\flcin\Documents"
             print("running transfer files function")
             for root, dirs, files in os.walk(dir_to_transfer):
@@ -195,7 +190,6 @@ class Camera:
 
 
 if __name__ == "__main__":
-    #stream_key = "dktr-20au-bqkh-3gac-cy62"  # remove this and put it in the config folder 
     timelapse_photo_interval = 60
 
     logger = SystemHealthLogger()
