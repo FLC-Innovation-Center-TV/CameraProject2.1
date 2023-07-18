@@ -10,3 +10,39 @@
 {"level": "INFO", "time": "2023-07-18 11:30:40,997", "message": "{'Encoder Bitrate': 4500000, 'Repeat': True, 'IPeriod': 40}"}
 {"level": "INFO", "time": "2023-07-18 11:30:41,000", "message": "{'FFmpeg Command': '-f flv rtmp://x.rtmp.youtube.com/live2/dktr-20au-bqkh-3gac-cy62', 'Audio Device': 'default', 'Audio Sync': -0.3, 'Audio Sample Rate': 48000, 'Audio Codec': 'aac', 'Audio Bitrate': 128000}"}
 {"level": "INFO", "time": "2023-07-18 11:30:42,701", "message": "{'cpu_usage': 57.1, 'memory_usage': 50.3, 'disk_usage': 15.7, 'sent_bytes': 85968612348, 'recv_bytes': 2337553215}"}
+{"level": "INFO", "time": "2023-07-18 12:29:15,234", "message": "{'Display Size': '1080p', 'Video Size': (1920, 1080)}"}
+{"level": "INFO", "time": "2023-07-18 12:29:15,304", "message": "{'Encoder Bitrate': 4500000, 'Repeat': True, 'IPeriod': 40}"}
+{"level": "INFO", "time": "2023-07-18 12:29:15,308", "message": "{'FFmpeg Command': '-f flv rtmp://x.rtmp.youtube.com/live2/dktr-20au-bqkh-3gac-cy62', 'Audio Device': 'default', 'Audio Sync': -0.3, 'Audio Sample Rate': 48000, 'Audio Codec': 'aac', 'Audio Bitrate': 128000}"}
+{"level": "INFO", "time": "2023-07-18 12:29:17,204", "message": "{'cpu_usage': 83.2, 'memory_usage': 50.7, 'disk_usage': 15.7, 'sent_bytes': 86038688629, 'recv_bytes': 2340837494}"}
+{"level": "INFO", "time": "2023-07-18 12:30:18,267", "message": "{'cpu_usage': 16.1, 'memory_usage': 49.7, 'disk_usage': 15.7, 'sent_bytes': 86076014016, 'recv_bytes': 2341701728}"}
+{"level": "INFO", "time": "2023-07-18 12:31:19,294", "message": "{'cpu_usage': 25.3, 'memory_usage': 48.6, 'disk_usage': 15.7, 'sent_bytes': 86114377085, 'recv_bytes': 2342571459}"}
+{"level": "INFO", "time": "2023-07-18 12:32:26,048", "message": "{'Display Size': '1080p', 'Video Size': (1920, 1080)}"}
+{"level": "INFO", "time": "2023-07-18 12:32:26,118", "message": "{'Encoder Bitrate': 4500000, 'Repeat': True, 'IPeriod': 40}"}
+{"level": "INFO", "time": "2023-07-18 12:32:26,121", "message": "{'FFmpeg Command': '-f flv rtmp://x.rtmp.youtube.com/live2/dktr-20au-bqkh-3gac-cy62', 'Audio Device': 'default', 'Audio Sync': -0.3, 'Audio Sample Rate': 48000, 'Audio Codec': 'aac', 'Audio Bitrate': 128000}"}
+{"level": "INFO", "time": "2023-07-18 12:32:27,859", "message": "{'cpu_usage': 48.6, 'memory_usage': 49.5, 'disk_usage': 15.7, 'sent_bytes': 86136425979, 'recv_bytes': 2343126079}"}
+{"level": "INFO", "time": "2023-07-18 12:33:54,747", "message": "{'Display Size': '1080p', 'Video Size': (1920, 1080)}"}
+{"level": "INFO", "time": "2023-07-18 12:33:54,792", "message": "{'Encoder Bitrate': 4500000, 'Repeat': True, 'IPeriod': 40}"}
+{"level": "INFO", "time": "2023-07-18 12:33:54,793", "message": "{'FFmpeg Command': '-f flv rtmp://x.rtmp.youtube.com/live2/dktr-20au-bqkh-3gac-cy62', 'Audio Device': 'default', 'Audio Sync': -0.3, 'Audio Sample Rate': 48000, 'Audio Codec': 'aac', 'Audio Bitrate': 128000}"}
+{"level": "INFO", "time": "2023-07-18 12:33:56,571", "message": "{'cpu_usage': 96.5, 'memory_usage': 51.3, 'disk_usage': 15.7, 'sent_bytes': 86154016592, 'recv_bytes': 2343623090}"}
+{"level": "INFO", "time": "2023-07-18 12:58:58,616", "message": "{'Display Size': '1080p', 'Video Size': (1920, 1080)}"}
+{"level": "INFO", "time": "2023-07-18 12:58:58,676", "message": "{'Encoder Bitrate': 4500000, 'Repeat': True, 'IPeriod': 40}"}
+{"level": "INFO", "time": "2023-07-18 12:58:58,678", "message": "{'FFmpeg Command': '-f flv rtmp://x.rtmp.youtube.com/live2/dktr-20au-bqkh-3gac-cy62', 'Audio Device': 'default', 'Audio Sync': -0.3, 'Audio Sample Rate': 48000, 'Audio Codec': 'aac', 'Audio Bitrate': 128000}"}
+{"level": "INFO", "time": "2023-07-18 12:59:00,434", "message": "{'cpu_usage': 56.3, 'memory_usage': 51.5, 'disk_usage': 15.7, 'sent_bytes': 86198647022, 'recv_bytes': 2345688972}"}
+{"level": "INFO", "time": "2023-07-18 13:02:28,139", "message": "{'Display Size': '1080p', 'Video Size': (1920, 1080)}"}
+{"level": "INFO", "time": "2023-07-18 13:02:28,209", "message": "{'Encoder Bitrate': 4500000, 'Repeat': True, 'IPeriod': 40}"}
+{"level": "INFO", "time": "2023-07-18 13:02:28,212", "message": "{'FFmpeg Command': '-f flv rtmp://x.rtmp.youtube.com/live2/dktr-20au-bqkh-3gac-cy62', 'Audio Device': 'default', 'Audio Sync': -0.3, 'Audio Sample Rate': 48000, 'Audio Codec': 'aac', 'Audio Bitrate': 128000}"}
+{"level": "INFO", "time": "2023-07-18 13:02:29,927", "message": "{'cpu_usage': 39.5, 'memory_usage': 51.7, 'disk_usage': 15.7, 'sent_bytes': 86214810202, 'recv_bytes': 2346142548}"}
+{"level": "INFO", "time": "2023-07-18 13:04:01,957", "message": "{'Display Size': '1080p', 'Video Size': (1920, 1080)}"}
+{"level": "INFO", "time": "2023-07-18 13:04:02,021", "message": "{'Encoder Bitrate': 4500000, 'Repeat': True, 'IPeriod': 40}"}
+{"level": "INFO", "time": "2023-07-18 13:04:02,024", "message": "{'FFmpeg Command': '-f flv rtmp://x.rtmp.youtube.com/live2/dktr-20au-bqkh-3gac-cy62', 'Audio Device': 'default', 'Audio Sync': -0.3, 'Audio Sample Rate': 48000, 'Audio Codec': 'aac', 'Audio Bitrate': 128000}"}
+{"level": "INFO", "time": "2023-07-18 13:04:03,774", "message": "{'cpu_usage': 39.4, 'memory_usage': 51.8, 'disk_usage': 15.7, 'sent_bytes': 86243745636, 'recv_bytes': 2346823097}"}
+{"level": "INFO", "time": "2023-07-18 13:05:04,842", "message": "{'cpu_usage': 86.8, 'memory_usage': 51.4, 'disk_usage': 15.7, 'sent_bytes': 86280408817, 'recv_bytes': 2347764919}"}
+{"level": "INFO", "time": "2023-07-18 13:29:15,918", "message": "{'Display Size': '1080p', 'Video Size': (1920, 1080)}"}
+{"level": "INFO", "time": "2023-07-18 13:29:15,961", "message": "{'Encoder Bitrate': 4500000, 'Repeat': True, 'IPeriod': 40}"}
+{"level": "INFO", "time": "2023-07-18 13:29:15,963", "message": "{'FFmpeg Command': '-f flv rtmp://x.rtmp.youtube.com/live2/dktr-20au-bqkh-3gac-cy62', 'Audio Device': 'default', 'Audio Sync': -0.3, 'Audio Sample Rate': 48000, 'Audio Codec': 'aac', 'Audio Bitrate': 128000}"}
+{"level": "INFO", "time": "2023-07-18 13:29:17,704", "message": "{'cpu_usage': 94.0, 'memory_usage': 53.3, 'disk_usage': 15.7, 'sent_bytes': 86335477481, 'recv_bytes': 2350874587}"}
+{"level": "INFO", "time": "2023-07-18 13:30:18,778", "message": "{'cpu_usage': 21.9, 'memory_usage': 50.6, 'disk_usage': 15.7, 'sent_bytes': 86372393152, 'recv_bytes': 2351766043}"}
+{"level": "INFO", "time": "2023-07-18 13:31:25,150", "message": "{'Display Size': '1080p', 'Video Size': (1920, 1080)}"}
+{"level": "INFO", "time": "2023-07-18 13:31:25,196", "message": "{'Encoder Bitrate': 4500000, 'Repeat': True, 'IPeriod': 40}"}
+{"level": "INFO", "time": "2023-07-18 13:31:25,197", "message": "{'FFmpeg Command': '-f flv rtmp://x.rtmp.youtube.com/live2/dktr-20au-bqkh-3gac-cy62', 'Audio Device': 'default', 'Audio Sync': -0.3, 'Audio Sample Rate': 48000, 'Audio Codec': 'aac', 'Audio Bitrate': 128000}"}
+{"level": "INFO", "time": "2023-07-18 13:31:26,869", "message": "{'cpu_usage': 49.5, 'memory_usage': 51.5, 'disk_usage': 15.7, 'sent_bytes': 86408143255, 'recv_bytes': 2352613878}"}

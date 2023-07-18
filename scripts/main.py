@@ -5,11 +5,23 @@ import threading
 import psutil
 import logging
 import subprocess
+import cv2
+import glob
 from datetime import datetime
 from picamera2 import Picamera2
 from picamera2.encoders import H264Encoder, Quality
 from picamera2.outputs import FfmpegOutput
 from logging.handlers import RotatingFileHandler
+
+# Load config
+with open("config/info.json") as f:
+    info = json.load(f)
+
+# Use the information from the config file
+stream_key = info['stream_key']
+bee_username = info['bee_username']
+bee_password = info['bee_password']
+bee_host = info['bee_host']
 
 class SystemHealthLogger:
     def __init__(self, log_file='logs/system_health.log', log_level=logging.INFO, max_bytes=1e6, backup_count=10):
@@ -29,7 +41,9 @@ class SystemHealthLogger:
 
         handler.setFormatter(formatter)
         self.logger.addHandler(handler)
-    
+    import json
+
+
     def get_system_health(self):
         """
         Function to get system health data.
@@ -136,11 +150,13 @@ class Camera:
             """
             Transfer all files from the specified directory and its subdirectories to a remote server.
             """
-            bee_host = "10.54.0.210"
-            bee_username = "picam"
-            bee_password = "tract0rSpy2.1"
-            destination = r"C:\Users\flcin\Documents"
 
+
+            # bee_host = "10.54.0.210"
+            # bee_username = "picam"
+            # bee_password = "tract0rSpy2.1"
+            destination = r"C:\Users\flcin\Documents"
+            print("running transfer files function")
             for root, dirs, files in os.walk(dir_to_transfer):
                 for file in files:
                     file_to_transfer = os.path.join(root, file)
@@ -151,11 +167,35 @@ class Camera:
                         print(f"File transfer failed with the following error:\n{completed_process.stderr}")
                     else:
                         print(f"File {file_to_transfer} transferred successfully!")
+    
+    def compile_images_to_video(self, dir_to_compile):
+        # Get the date from the directory name (assuming it ends with yyyy/mm/dd)
+        dir_date = dir_to_compile.split('/')[-3:]
+        date_str = "".join(dir_date)  # join year, month, day into a single string
+
+        # Get all .jpg files from the directory
+        img_array = []
+        for filename in sorted(glob.glob(os.path.join(dir_to_compile, '*.jpg'))):
+            img = cv2.imread(filename)
+            height, width, layers = img.shape
+            size = (width,height)
+            img_array.append(img)
+
+        # Specify the video name with date prefix and create a VideoWriter object
+        video_name = os.path.join(dir_to_compile, f'{date_str}_timelapse.mp4')
+        out = cv2.VideoWriter(video_name, cv2.VideoWriter_fourcc(*'MP4V'), 15, size)
+        
+        for i in range(len(img_array)):
+            out.write(img_array[i])
+        out.release()
+
+        return video_name  # return the path of the created video for further use
+
 
 
 
 if __name__ == "__main__":
-    stream_key = "dktr-20au-bqkh-3gac-cy62"  # remove this and put it in the config folder 
+    #stream_key = "dktr-20au-bqkh-3gac-cy62"  # remove this and put it in the config folder 
     timelapse_photo_interval = 60
 
     logger = SystemHealthLogger()
@@ -224,6 +264,8 @@ if __name__ == "__main__":
     except Exception as e:
         print(f"Unexpected error: {e}")
     finally:
+        camera.picam2.stop_recording()
+
         # Use datetime to get current year, month, and day
         now = datetime.now()
         year, month, day = now.strftime('%Y'), now.strftime('%m'), now.strftime('%d')
@@ -231,5 +273,10 @@ if __name__ == "__main__":
         # Get the path for today's images
         today_directory = os.path.join(camera.image_storage_path, year, month, day)
 
+        # Compile images into a video
+        video_path = camera.compile_images_to_video(today_directory)
+
+        # You may want to print or log the path of the created video
+        print(f"Created video at {video_path}")
+
         camera.transfer_files(today_directory)
-        camera.picam2.stop_recording()
