@@ -132,19 +132,27 @@ class Camera:
             # Wait for the next capture
             time.sleep(interval)
 
-    def transfer_files(self, file_to_transfer):
-        bee_host = "10.54.0.210"
-        bee_username = "picam"
-        bee_password = "tract0rSpy2.1"
-        destination = r"C:\Users\flcin\Documents"
+    def transfer_files(self, dir_to_transfer):
+            """
+            Transfer all files from the specified directory and its subdirectories to a remote server.
+            """
+            bee_host = "10.54.0.210"
+            bee_username = "picam"
+            bee_password = "tract0rSpy2.1"
+            destination = r"C:\Users\flcin\Documents"
 
-        newcommand = ["sshpass", "-p", bee_password, "scp", "-r", file_to_transfer, f"{bee_username}@{bee_host}:{destination}"]
-        
-        completed_process = subprocess.run(newcommand, text=True, capture_output=True)
-        if completed_process.returncode != 0:
-            print(f"File transfer failed with the following error:\n{completed_process.stderr}")
-        else:
-            print(f"File transferred successfully!")
+            for root, dirs, files in os.walk(dir_to_transfer):
+                for file in files:
+                    file_to_transfer = os.path.join(root, file)
+                    newcommand = ["sshpass", "-p", bee_password, "scp", "-r", file_to_transfer, f"{bee_username}@{bee_host}:{destination}"]
+                    
+                    completed_process = subprocess.run(newcommand, text=True, capture_output=True)
+                    if completed_process.returncode != 0:
+                        print(f"File transfer failed with the following error:\n{completed_process.stderr}")
+                    else:
+                        print(f"File {file_to_transfer} transferred successfully!")
+
+
 
 if __name__ == "__main__":
     stream_key = "dktr-20au-bqkh-3gac-cy62"  # remove this and put it in the config folder 
@@ -216,4 +224,12 @@ if __name__ == "__main__":
     except Exception as e:
         print(f"Unexpected error: {e}")
     finally:
+        # Use datetime to get current year, month, and day
+        now = datetime.now()
+        year, month, day = now.strftime('%Y'), now.strftime('%m'), now.strftime('%d')
+
+        # Get the path for today's images
+        today_directory = os.path.join(camera.image_storage_path, year, month, day)
+
+        camera.transfer_files(today_directory)
         camera.picam2.stop_recording()
