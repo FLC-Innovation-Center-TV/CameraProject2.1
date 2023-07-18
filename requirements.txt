@@ -1,0 +1,5 @@
+google_api_python_client==1.7.2
+google_auth_oauthlib==0.4.1
+gpiozero==1.6.2
+picamera2==0.3.9
+psutil==5.8.0
