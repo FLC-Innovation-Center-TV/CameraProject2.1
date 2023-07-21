@@ -9,6 +9,8 @@ __pycache__/
 *.pyo
 *.pyd
 
+venv/*
+
 # Ignore log files and everything in logs directory
 *.log
 logs/*
