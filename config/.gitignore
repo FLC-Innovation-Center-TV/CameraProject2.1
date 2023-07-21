@@ -9,19 +9,22 @@ __pycache__/
 *.pyo
 *.pyd
 
-# Ignore log files
+# Ignore log files and everything in logs directory
 *.log
-logs/
+logs/*
 
 # Ignore the console error log
 console-error-logs.txt
 
-# Ignore secret files
-client_secret_*.json
-credentials.ini
+# Ignore secret files and everything in the config directory
+config/*
 
 # Ignore scripts (if you don't want to upload them to GitHub)
 # flaskserver.py
 # pimonitoring.py
 # emailnotifs.py
 # (add more as needed)
+scripts/*
+
+# But don't ignore .gitkeep files
+!.gitkeep
