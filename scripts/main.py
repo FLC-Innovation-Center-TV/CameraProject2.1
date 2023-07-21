@@ -199,7 +199,7 @@ class Camera:
 
 
 if __name__ == "__main__":
-    timelapse_photo_interval = 30
+    timelapse_photo_interval = 60
 
     logger = SystemHealthLogger()
     camera = Camera(stream_key)
