@@ -285,7 +285,6 @@ if __name__ == "__main__":
         print(f"Unexpected error: {e}")
     finally:
         camera.picam2.stop_recording()
-
         # Use datetime to get current year, month, and day
         now = datetime.now()
         year, month, day = now.strftime('%Y'), now.strftime('%m'), now.strftime('%d')

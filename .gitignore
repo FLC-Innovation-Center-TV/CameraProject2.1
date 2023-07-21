@@ -26,7 +26,7 @@ config/*
 # pimonitoring.py
 # emailnotifs.py
 # (add more as needed)
-scripts/*
+#scripts/*
 
 # But don't ignore .gitkeep files
 !.gitkeep
