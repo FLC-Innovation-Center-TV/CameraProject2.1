@@ -98,7 +98,7 @@ class Camera:
         "4K": (3840, 2160)
     }
 
-    def __init__(self, stream_key, chosen_display="1080p", local_image_storage_path='/home/pi/Desktop/timelapsestorage'):
+    def __init__(self, stream_key, chosen_display="1080p", local_image_storage_path='/CameraProject2.1/timelapsestoragetimelapsestorage'):
         self.chosen_display = chosen_display
         self.video_size = self.DISPLAY_SIZES[chosen_display]
         self.stream_key = stream_key
