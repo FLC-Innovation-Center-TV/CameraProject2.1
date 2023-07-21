@@ -98,7 +98,7 @@ class Camera:
         "4K": (3840, 2160)
     }
 
-    def __init__(self, stream_key, chosen_display="1080p", local_image_storage_path='/CameraProject2.1/timelapsestoragetimelapsestorage'):
+    def __init__(self, stream_key, chosen_display="1080p", local_image_storage_path='/home/pi/Desktop/CameraProject2.1/timelapsestorage'):
         self.chosen_display = chosen_display
         self.video_size = self.DISPLAY_SIZES[chosen_display]
         self.stream_key = stream_key
@@ -163,6 +163,7 @@ class Camera:
                     else:
                         print(f"File {file_to_transfer} transferred successfully!")
     
+
     def compile_images_to_video(self, dir_to_compile):
         # Get the date from the directory name (assuming it ends with yyyy/mm/dd)
         dir_date = dir_to_compile.split('/')[-3:]
@@ -176,6 +177,11 @@ class Camera:
             size = (width,height)
             img_array.append(img)
 
+        # Check if any .jpg files were found
+        if not img_array:
+            print(f"No images found in {dir_to_compile}. Skipping video compilation.")
+            return None  # or handle this situation differently if needed
+
         # Specify the video name with date prefix and create a VideoWriter object
         video_name = os.path.join(dir_to_compile, f'{date_str}_timelapse.mp4')
         out = cv2.VideoWriter(video_name, cv2.VideoWriter_fourcc(*'MP4V'), 15, size)
@@ -185,7 +191,6 @@ class Camera:
         out.release()
 
         return video_name  # return the path of the created video for further use
-
 
 
 
