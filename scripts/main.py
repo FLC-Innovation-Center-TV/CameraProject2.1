@@ -150,7 +150,7 @@ class Camera:
             # Wait for the next capture
             time.sleep(interval)
 
-    def transfer_files(self, dir_to_transfer):
+    def batch_transfer_files(self, dir_to_transfer):
             """
             Transfer all files from the specified directory and its subdirectories to a remote server.
             """
@@ -169,6 +169,9 @@ class Camera:
     
 
     def compile_images_to_video(self, dir_to_compile):
+
+        framerate = 24 # frames per second 
+        
         # Get the date from the directory name (assuming it ends with yyyy/mm/dd)
         dir_date = dir_to_compile.split('/')[-3:]
         date_str = "".join(dir_date)  # join year, month, day into a single string
@@ -188,7 +191,7 @@ class Camera:
 
         # Specify the video name with date prefix and create a VideoWriter object
         video_name = os.path.join(dir_to_compile, f'{date_str}_timelapse.mp4')
-        out = cv2.VideoWriter(video_name, cv2.VideoWriter_fourcc(*'MP4V'), 15, size)
+        out = cv2.VideoWriter(video_name, cv2.VideoWriter_fourcc(*'MP4V'), framerate, size)
         
         for i in range(len(img_array)):
             out.write(img_array[i])
@@ -282,4 +285,4 @@ if __name__ == "__main__":
         # You may want to print or log the path of the created video
         print(f"Created video at {video_path}")
 
-        camera.transfer_files(today_directory)
+        camera.batch_transfer_files(today_directory)
