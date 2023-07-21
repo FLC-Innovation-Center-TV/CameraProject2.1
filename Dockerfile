@@ -1,5 +1,10 @@
-# Use the official Python image from the Docker Hub
+
+
 FROM python:3.9
+
+# Install system-level dependencies for pygame
+RUN apt-get update && apt-get install -y \
+    libsdl1.2-dev
 
 # Install dependencies
 RUN apt-get update && apt-get install -y \
@@ -13,7 +18,7 @@ WORKDIR /CameraProject2.1
 COPY requirements.txt .
 
 # Install any dependencies
-RUN pip install --no-cache-dir -r requirements.txt
+RUN pip install -r requirements.txt
 
 # Copy the rest of the code
 COPY . .
@@ -23,4 +28,3 @@ VOLUME /CameraProject2.1
 
 # Run the command
 CMD ["python", "scripts/main.py"]
-

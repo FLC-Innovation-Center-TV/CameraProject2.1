@@ -14,7 +14,11 @@ from picamera2.outputs import FfmpegOutput
 from logging.handlers import RotatingFileHandler
 
 # Load config
-with open("config/info.json") as f:
+dir_path = os.path.dirname(os.path.realpath(__file__))
+info_path = os.path.join(dir_path, "..", "config", "info.json")
+
+
+with open(info_path) as f:
     info = json.load(f)
 
 # Use the information from the config file
@@ -24,7 +28,7 @@ bee_password = info['bee_password']
 bee_host = info['bee_host']
 
 class SystemHealthLogger:
-    def __init__(self, log_file='logs/system_health.log', log_level=logging.INFO, max_bytes=1e6, backup_count=10):
+    def __init__(self, log_file=os.path.join(dir_path, "..", 'logs', 'system_health.log'), log_level=logging.INFO, max_bytes=1e6, backup_count=10):
         # Set up logging
         self.logger = logging.getLogger('system_health')
         self.logger.setLevel(log_level)
@@ -98,7 +102,7 @@ class Camera:
         "4K": (3840, 2160)
     }
 
-    def __init__(self, stream_key, chosen_display="1080p", local_image_storage_path='/home/pi/Desktop/CameraProject2.1/timelapsestorage'):
+    def __init__(self, stream_key, chosen_display="1080p", local_image_storage_path=os.path.join(dir_path, "..", 'timelapsestorage')):
         self.chosen_display = chosen_display
         self.video_size = self.DISPLAY_SIZES[chosen_display]
         self.stream_key = stream_key
@@ -195,7 +199,7 @@ class Camera:
 
 
 if __name__ == "__main__":
-    timelapse_photo_interval = 5
+    timelapse_photo_interval = 30
 
     logger = SystemHealthLogger()
     camera = Camera(stream_key)
