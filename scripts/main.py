@@ -102,7 +102,7 @@ class Camera:
         "4K": (3840, 2160)
     }
 
-    def __init__(self, stream_key, chosen_display="1080p", local_image_storage_path=os.path.join(dir_path, "..", 'timelapsestorage')):
+    def __init__(self, stream_key, chosen_display="1080p", local_image_storage_path=os.path.join(dir_path, "..", "timelapsestorage", "unuploaded")):
         self.chosen_display = chosen_display
         self.video_size = self.DISPLAY_SIZES[chosen_display]
         self.stream_key = stream_key
@@ -138,6 +138,37 @@ class Camera:
         request.release()
 
         return file_path
+    
+    def upload_images():
+
+        unuploaded = os.path.join(dir_path, "..", "timelapsestorage", "unuploaded")
+        uploaded = os.path.join(dir_path, "..", "timelapsestorage", "uploaded")
+        destination_root = r"C:\Users\flcin\Documents"
+
+        for folder, _, images in os.walk(unuploaded):
+            for image_name in images:
+                image_path = os.path.join(folder, image_name)
+
+                newcommand = ["sshpass", "-p", bee_password, "scp", image_path, f"{bee_username}@{bee_host}:{destination_root}"]
+                    
+                completed_process = subprocess.run(newcommand, text=True, capture_output=True)
+                upload_successful = completed_process.returncode == 0
+                if upload_successful:
+                    print(f"Image {image_path} uploaded successfully!")
+                    date = os.path.relpath(folder, unuploaded)
+
+                    old_day_folder = os.path.join(unuploaded, date)
+                    new_day_folder = os.path.join(uploaded, date)
+
+                    new_image_path = os.path.join(new_day_folder, image_name)
+
+                    os.makedirs(new_day_folder, exist_ok=True)
+                    try:
+                        os.rename(image_path, new_image_path)
+                    except:
+                        print("Failed to transfer image to backup, likely because there's already an image with the exact same name.")
+                else:
+                    print(f"Image upload failed with the following error:\n{completed_process.stderr}")
 
     def take_timelapse(self, interval):
         """
@@ -146,27 +177,10 @@ class Camera:
         while True:
             # Capture and save image
             self.save_image()
+            self.upload_images()
 
             # Wait for the next capture
             time.sleep(interval)
-
-    def batch_transfer_files(self, dir_to_transfer):
-            """
-            Transfer all files from the specified directory and its subdirectories to a remote server.
-            """
-            destination = r"C:\Users\flcin\Documents"
-            print("running transfer files function")
-            for root, dirs, files in os.walk(dir_to_transfer):
-                for file in files:
-                    file_to_transfer = os.path.join(root, file)
-                    newcommand = ["sshpass", "-p", bee_password, "scp", "-r", file_to_transfer, f"{bee_username}@{bee_host}:{destination}"]
-                    
-                    completed_process = subprocess.run(newcommand, text=True, capture_output=True)
-                    if completed_process.returncode != 0:
-                        print(f"File transfer failed with the following error:\n{completed_process.stderr}")
-                    else:
-                        print(f"File {file_to_transfer} transferred successfully!")
-    
 
     def compile_images_to_video(self, dir_to_compile):
 
@@ -284,5 +298,3 @@ if __name__ == "__main__":
 
         # You may want to print or log the path of the created video
         print(f"Created video at {video_path}")
-
-        camera.batch_transfer_files(today_directory)
