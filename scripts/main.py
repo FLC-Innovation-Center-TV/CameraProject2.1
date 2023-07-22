@@ -293,6 +293,8 @@ if __name__ == "__main__":
         threading.Thread(target=logger.log_system_health, daemon=True).start()
         
         camera.take_timelapse(interval=timelapse_photo_interval)
+
+        break 
             
     except KeyboardInterrupt:
         print("Interrupted by user, stopping recording...")
