@@ -140,21 +140,31 @@ class Camera:
 
         return file_path
     
+    def transfer_file(self, file_path, destination_path):
+        """
+        Transfer a file to the remote server.
+        """
+        newcommand = ["sshpass", "-p", bee_password, "scp", file_path, f"{bee_username}@{bee_host}:{destination_path}"]
+        completed_process = subprocess.run(newcommand, text=True, capture_output=True)
+        upload_successful = completed_process.returncode == 0
+
+        if upload_successful:
+            print(f"File {file_path} transferred successfully!")
+        else:
+            print(f"File transfer failed with the following error:\n{completed_process.stderr}")
+
+        return upload_successful
+
     def upload_images(self):
 
         unuploaded = self.unuploaded
         uploaded = self.uploaded
-        destination_root = r"C:\Users\flcin\Documents"
+        destination_path = r"C:\Users\flcin\Documents"
 
         for folder, _, images in os.walk(unuploaded):
             for image_name in images:
                 image_path = os.path.join(folder, image_name)
-
-                newcommand = ["sshpass", "-p", bee_password, "scp", image_path, f"{bee_username}@{bee_host}:{destination_root}"]
-                    
-                completed_process = subprocess.run(newcommand, text=True, capture_output=True)
-                upload_successful = completed_process.returncode == 0
-                if upload_successful:
+                if self.transfer_file(image_path, destination_path):
                     print(f"Image {image_path} uploaded successfully!")
                     date = os.path.relpath(folder, unuploaded)
 
@@ -169,14 +179,12 @@ class Camera:
                     except:
                         print("Failed to transfer image to backup, likely because there's already an image with the exact same name.")
                 else:
-                    print(f"Image upload failed with the following error:\n{completed_process.stderr}")
+                    print(f"Image upload failed")
 
     def take_timelapse(self, interval):
         """
         Function to capture images at regular intervals.
         """
-        start_time = time.time()
-        
         while True:
             # Capture and save image
             self.save_image()
@@ -184,8 +192,6 @@ class Camera:
 
             # Wait for the next capture
             time.sleep(interval)
-            if elapsed_time_hours > 0.00833333:  # approximately 0.5 minutes
-                break   
 
     def compile_images_to_video(self, dir_to_compile):
 
@@ -221,7 +227,7 @@ class Camera:
 
 
 if __name__ == "__main__":
-    timelapse_photo_interval = 60
+    timelapse_photo_interval = 3
 
     logger = SystemHealthLogger()
     camera = Camera(stream_key)
@@ -279,6 +285,10 @@ if __name__ == "__main__":
         threading.Thread(target=logger.log_system_health, daemon=True).start()
         
         camera.take_timelapse(interval=timelapse_photo_interval)
+
+        # Keep the script running
+        while True:
+            pass
             
     except KeyboardInterrupt:
         print("Interrupted by user, stopping recording...")
