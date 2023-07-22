@@ -175,6 +175,8 @@ class Camera:
         """
         Function to capture images at regular intervals.
         """
+        start_time = time.time()
+        
         while True:
             # Capture and save image
             self.save_image()
@@ -182,6 +184,8 @@ class Camera:
 
             # Wait for the next capture
             time.sleep(interval)
+            if elapsed_time_hours > 0.00833333:  # approximately 0.5 minutes
+                break   
 
     def compile_images_to_video(self, dir_to_compile):
 
