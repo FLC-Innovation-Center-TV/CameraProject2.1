@@ -185,13 +185,21 @@ class Camera:
         """
         Function to capture images at regular intervals.
         """
+        start_time = time.time()
+        
         while True:
             # Capture and save image
             self.save_image()
             self.upload_images()
-
+        
             # Wait for the next capture
             time.sleep(interval)
+            
+            # Calculate elapsed time in hours
+            elapsed_time_hours = (time.time() - start_time) / 3600
+            
+            if elapsed_time_hours > 0.00833333:  # approximately 0.5 minutes
+                break   
 
     def compile_images_to_video(self, dir_to_compile):
 
@@ -227,7 +235,7 @@ class Camera:
 
 
 if __name__ == "__main__":
-    timelapse_photo_interval = 3
+    timelapse_photo_interval = 6
 
     logger = SystemHealthLogger()
     camera = Camera(stream_key)
@@ -285,10 +293,6 @@ if __name__ == "__main__":
         threading.Thread(target=logger.log_system_health, daemon=True).start()
         
         camera.take_timelapse(interval=timelapse_photo_interval)
-
-        # Keep the script running
-        while True:
-            pass
             
     except KeyboardInterrupt:
         print("Interrupted by user, stopping recording...")
