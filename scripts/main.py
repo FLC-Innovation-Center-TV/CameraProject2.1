@@ -102,11 +102,12 @@ class Camera:
         "4K": (3840, 2160)
     }
 
-    def __init__(self, stream_key, chosen_display="1080p", local_image_storage_path=os.path.join(dir_path, "..", "timelapsestorage", "unuploaded")):
+    def __init__(self, stream_key, chosen_display="1080p"):
         self.chosen_display = chosen_display
         self.video_size = self.DISPLAY_SIZES[chosen_display]
         self.stream_key = stream_key
-        self.image_storage_path = local_image_storage_path
+        self.unuploaded = os.path.join(dir_path, "..", "timelapsestorage", "unuploaded")
+        self.uploaded = os.path.join(dir_path, "..", "timelapsestorage", "uploaded")
         self.picam2 = Picamera2()
 
     @staticmethod
@@ -123,7 +124,7 @@ class Camera:
         year, month, day = now.strftime('%Y'), now.strftime('%m'), now.strftime('%d')
 
         # Append year, month, and day to your image storage path
-        save_directory = os.path.join(self.image_storage_path, year, month, day)
+        save_directory = os.path.join(self.unuploaded, year, month, day)
 
         # Create directory if it doesn't exist
         os.makedirs(save_directory, exist_ok=True)
@@ -139,10 +140,10 @@ class Camera:
 
         return file_path
     
-    def upload_images():
+    def upload_images(self):
 
-        unuploaded = os.path.join(dir_path, "..", "timelapsestorage", "unuploaded")
-        uploaded = os.path.join(dir_path, "..", "timelapsestorage", "uploaded")
+        unuploaded = self.unuploaded
+        uploaded = self.uploaded
         destination_root = r"C:\Users\flcin\Documents"
 
         for folder, _, images in os.walk(unuploaded):
@@ -290,7 +291,7 @@ if __name__ == "__main__":
         year, month, day = now.strftime('%Y'), now.strftime('%m'), now.strftime('%d')
 
         # Get the path for today's images
-        today_directory = os.path.join(camera.image_storage_path, year, month, day)
+        today_directory = os.path.join(camera.uploaded, year, month, day)
 
         # Compile images into a video
         video_path = camera.compile_images_to_video(today_directory)
