@@ -298,3 +298,6 @@ if __name__ == "__main__":
 
         # You may want to print or log the path of the created video
         print(f"Created video at {video_path}")
+
+        destination_path = r"C:\Users\flcin\Documents"
+        camera.transfer_file(video_path, destination_path)
