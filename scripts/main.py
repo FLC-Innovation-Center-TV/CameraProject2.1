@@ -310,4 +310,10 @@ if __name__ == "__main__":
         print(f"Created video at {video_path}")
 
         destination_path = r"C:\Users\flcin\Documents"
-        camera.transfer_file(video_path, destination_path)
+        if(camera.transfer_file(video_path, destination_path)):
+            print("Video uploaded successfully")
+        else:
+            print("Video upload failed")
+
+        os.remove(video_path)
+        print("Deleted video from local storage")
