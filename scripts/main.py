@@ -20,7 +20,7 @@ from email.mime.base import MIMEBase
 from email.mime.text import MIMEText
 from email.utils import COMMASPACE
 from email import encoders
-# email libraries end
+# email libraries end 
 
 # Load config
 dir_path = os.path.dirname(os.path.realpath(__file__))
