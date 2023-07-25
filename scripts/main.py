@@ -165,7 +165,6 @@ class Camera:
             for image_name in images:
                 image_path = os.path.join(folder, image_name)
                 if self.transfer_file(image_path, destination_path):
-                    print(f"Image {image_path} uploaded successfully!")
                     date = os.path.relpath(folder, unuploaded)
 
                     old_day_folder = os.path.join(unuploaded, date)
@@ -198,7 +197,7 @@ class Camera:
             # Calculate elapsed time in hours
             elapsed_time_hours = (time.time() - start_time) / 3600
             
-            if elapsed_time_hours > 0.00833333:  # approximately 0.5 minutes
+            if elapsed_time_hours > 0.02:  # 72 seconds
                 break   
 
     def compile_images_to_video(self, dir_to_compile):
@@ -231,12 +230,36 @@ class Camera:
         out.release()
 
         return video_name  # return the path of the created video for further use
+        
+    def finish(self):
+        #self.picam2.stop_recording()
+        
+        # Use datetime to get current year, month, and day
+        now = datetime.now()
+        year, month, day = now.strftime('%Y'), now.strftime('%m'), now.strftime('%d')
 
+        # Get the path for today's images
+        today_directory = os.path.join(self.uploaded, year, month, day)
+
+        # Compile images into a video
+        video_path = self.compile_images_to_video(today_directory)
+        print("done compiling")
+
+        # You may want to print or log the path of the created video
+        print(f"Created video at {video_path}")
+
+        destination_path = r"C:\Users\flcin\Documents"
+        if(self.transfer_file(video_path, destination_path)):
+            print("Video uploaded successfully")
+        else:
+            print("Video upload failed")
+
+        os.remove(video_path)
+        print("Deleted video from local storage")
 
 
 if __name__ == "__main__":
-    timelapse_photo_interval = 6
-
+    timelapse_photo_interval = 10
     logger = SystemHealthLogger()
     camera = Camera(stream_key)
 
@@ -293,33 +316,11 @@ if __name__ == "__main__":
         threading.Thread(target=logger.log_system_health, daemon=True).start()
         
         camera.take_timelapse(interval=timelapse_photo_interval)
-
-        break 
             
     except KeyboardInterrupt:
-        print("Interrupted by user, stopping recording...")
+        print(f"Interrupted by keyboard exception, stopping...")
     except Exception as e:
         print(f"Unexpected error: {e}")
     finally:
-        camera.picam2.stop_recording()
-        # Use datetime to get current year, month, and day
-        now = datetime.now()
-        year, month, day = now.strftime('%Y'), now.strftime('%m'), now.strftime('%d')
-
-        # Get the path for today's images
-        today_directory = os.path.join(camera.uploaded, year, month, day)
-
-        # Compile images into a video
-        video_path = camera.compile_images_to_video(today_directory)
-
-        # You may want to print or log the path of the created video
-        print(f"Created video at {video_path}")
-
-        destination_path = r"C:\Users\flcin\Documents"
-        if(camera.transfer_file(video_path, destination_path)):
-            print("Video uploaded successfully")
-        else:
-            print("Video upload failed")
-
-        os.remove(video_path)
-        print("Deleted video from local storage")
+        camera.finish()
+        

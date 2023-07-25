@@ -21,6 +21,9 @@ console-error-logs.txt
 # Ignore secret files and everything in the config directory
 config/*
 
+# Ignore timelapsestorage folder and subdirectories 
+timelapsestorage/*
+
 # Ignore scripts (if you don't want to upload them to GitHub)
 # flaskserver.py
 # pimonitoring.py
