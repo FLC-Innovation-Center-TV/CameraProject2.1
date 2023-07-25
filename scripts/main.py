@@ -13,6 +13,15 @@ from picamera2.encoders import H264Encoder, Quality
 from picamera2.outputs import FfmpegOutput
 from logging.handlers import RotatingFileHandler
 
+# email libraries start
+import smtplib
+from email.mime.multipart import MIMEMultipart
+from email.mime.base import MIMEBase
+from email.mime.text import MIMEText
+from email.utils import COMMASPACE
+from email import encoders
+# email libraries end
+
 # Load config
 dir_path = os.path.dirname(os.path.realpath(__file__))
 info_path = os.path.join(dir_path, "..", "config", "info.json")
@@ -76,20 +85,50 @@ class SystemHealthLogger:
             'recv_bytes': recv_bytes
         }
     
-    def log_system_health(self):
-        """
-        Function to continuously log system health data.
-        """
-        while True:
-            system_health = self.get_system_health()
-            self.logger.info(system_health)
-            time.sleep(60)  # Log every 60 seconds 
-    
     def log_parameters(self, parameters: dict):
         """
         Function to log parameters.
         """
         self.logger.info(parameters)
+
+    def send_email(self, subject, text, files=None):
+        assert isinstance(files, list)
+
+        msg = MIMEMultipart()
+        msg['From'] = info['email_username']
+        msg['To'] = COMMASPACE.join(info['email_recipients'])
+        msg['Subject'] = subject
+
+        msg.attach(MIMEText(text))
+
+        for file in files or []:
+            with open(file, "rb") as f:
+                part = MIMEBase('application', "octet-stream")
+                part.set_payload(f.read())
+                encoders.encode_base64(part)
+                part.add_header('Content-Disposition', 'attachment', filename=os.path.basename(file)) 
+                msg.attach(part)
+
+        smtp = smtplib.SMTP(info['email_smtp_server'])
+        smtp.starttls()
+        smtp.login(info['email_username'], info['email_password'])
+        smtp.sendmail(info['email_username'], info['email_recipients'], msg.as_string())
+        smtp.close()
+
+    def check_thresholds(self, system_health):
+        cpu_threshold = info['cpu_threshold']
+        memory_threshold = info['memory_threshold']
+        disk_threshold = info['disk_threshold']
+
+        if system_health['cpu_usage'] > cpu_threshold or system_health['memory_usage'] > memory_threshold or system_health['disk_usage'] > disk_threshold:
+            self.send_email("System Health Alert", f"CPU: {system_health['cpu_usage']}, Memory: {system_health['memory_usage']}, Disk: {system_health['disk_usage']}", [self.log_file])
+
+    def log_system_health(self):
+        while True:
+            system_health = self.get_system_health()
+            self.logger.info(system_health)
+            self.check_thresholds(system_health)
+            time.sleep(60)  # Log every 60 seconds
 
 
 class Camera:
@@ -248,11 +287,23 @@ class Camera:
         # You may want to print or log the path of the created video
         print(f"Created video at {video_path}")
 
+        # destination_path = r"C:\Users\flcin\Documents"
+        # if(self.transfer_file(video_path, destination_path)):
+        #     print("Video uploaded successfully")
+        # else:
+        #     print("Video upload failed")
+
+        # os.remove(video_path)
+        # print("Deleted video from local storage")
+
         destination_path = r"C:\Users\flcin\Documents"
         if(self.transfer_file(video_path, destination_path)):
             print("Video uploaded successfully")
         else:
             print("Video upload failed")
+        
+        # Send video via email before deleting
+        logger.send_email("Daily Timelapse Video", "The daily timelapse video is attached.", [video_path])
 
         os.remove(video_path)
         print("Deleted video from local storage")
