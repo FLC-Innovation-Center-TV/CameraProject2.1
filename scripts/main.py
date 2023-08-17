@@ -3,7 +3,6 @@
 import json
 import time
 import os
-import threading
 import psutil
 import logging
 import subprocess
@@ -20,7 +19,7 @@ print(f"Script ran at: {datetime.now()}")
 
 # Load config
 dir_path = os.path.dirname(os.path.realpath(__file__))
-info_path = os.path.join(dir_path, "..", "config", "info.json")
+info_path = os.path.join(dir_path,"..", "config", "info.json")
 
 
 with open(info_path) as f:
@@ -182,25 +181,21 @@ class Camera:
                 else:
                     print(f"Image upload failed")
 
-    def take_timelapse(self, interval):
+    def take_timelapse(self, interval, logger_instance):
         """
         Function to capture images at regular intervals.
         """
-        start_time = time.time()
-        
         while True:
+            # Log system health
+            system_health = logger_instance.get_system_health()
+            logger_instance.logger.info(system_health)
+            
             # Capture and save image
             self.save_image()
             self.upload_images()
-        
+            
             # Wait for the next capture
             time.sleep(interval)
-            
-            # Calculate elapsed time in hours
-            elapsed_time_hours = (time.time() - start_time) / 3600
-            
-            if elapsed_time_hours > 2:  
-                break   
 
     def compile_images_to_video(self, dir_to_compile):
 
@@ -314,10 +309,7 @@ if __name__ == "__main__":
         # start livestream
         camera.picam2.start_recording(encoder, output)
         
-        # Start logging in a separate thread
-        threading.Thread(target=logger.log_system_health, daemon=True).start()
-        
-        camera.take_timelapse(interval=timelapse_photo_interval)
+        camera.take_timelapse(interval=timelapse_photo_interval, logger_instance=logger)
             
     except KeyboardInterrupt:
         print(f"Interrupted by keyboard exception, stopping...")
