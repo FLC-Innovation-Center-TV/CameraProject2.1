@@ -22,7 +22,7 @@ print("define sizes for common displays")
 
 def create_ffmpeg_command(stream_key):
     # Here we introduce the silent audio directly in the command
-    return "-f lavfi -i anullsrc=r=44100:cl=stereo -f flv rtmp://x.rtmp.youtube.com/live2/{}".format(stream_key)
+    return "-f flv rtmp://x.rtmp.youtube.com/live2/{}".format(stream_key)
 
 print("create ffmpeg command")
 
