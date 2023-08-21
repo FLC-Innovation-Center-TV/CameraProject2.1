@@ -14,17 +14,17 @@ display_sizes = {
     "4K": (3840, 2160)
 }
 
-# Configuration Folder and File
-CONFIG_DIR = './config'  # Relative path to the current script's directory
-CONFIG_FILE = 'stream_key.txt'
-os.makedirs(CONFIG_DIR, exist_ok=True)  # Ensure the directory exists
+# # Configuration Folder and File
+# CONFIG_DIR = './config'  # Relative path to the current script's directory
+# CONFIG_FILE = 'stream_key.txt'
+# os.makedirs(CONFIG_DIR, exist_ok=True)  # Ensure the directory exists
 
-def get_stream_key():
-    with open(os.path.join(CONFIG_DIR, CONFIG_FILE), 'r') as file:
-        return file.readline().strip()
+# def get_stream_key():
+#     with open(os.path.join(CONFIG_DIR, CONFIG_FILE), 'r') as file:
+#         return file.readline().strip()
 
 def create_ffmpeg_command(stream_key):
-    return "-f flv rtmp://x.rtmp.youtube.com/live2/{}".format(stream_key)
+    return "-f flv rtmp://a.rtmp.youtube.com/live2/{}".format("d6w1-xaz9-szub-vy45-8rj0")
 
 stream_key = get_stream_key()
 ffmpeg_cmd = create_ffmpeg_command(stream_key)
