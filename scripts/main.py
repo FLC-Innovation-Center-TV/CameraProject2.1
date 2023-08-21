@@ -24,9 +24,9 @@ display_sizes = {
 #         return file.readline().strip()
 
 def create_ffmpeg_command(stream_key):
-    return "-f flv rtmp://a.rtmp.youtube.com/live2/{}".format("d6w1-xaz9-szub-vy45-8rj0")
+    return "-f flv rtmp://a.rtmp.youtube.com/live2/{}".format(stream_key)
 
-stream_key = get_stream_key()
+stream_key = "d6w1-xaz9-szub-vy45-8rj0"
 ffmpeg_cmd = create_ffmpeg_command(stream_key)
 
 picam2 = Picamera2()
