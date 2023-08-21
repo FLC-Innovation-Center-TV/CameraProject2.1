@@ -29,6 +29,8 @@ def create_ffmpeg_command(stream_key):
 stream_key = "d6w1-xaz9-szub-vy45-8rj0"
 ffmpeg_cmd = create_ffmpeg_command(stream_key)
 
+print(create_ffmpeg_command)
+
 picam2 = Picamera2()
 chosen_display = "1080p"
 video_size = display_sizes[chosen_display]
@@ -56,11 +58,11 @@ output = FfmpegOutput(ffmpeg_cmd, audio=True, audio_device="default", audio_sync
 
     #return file_path
 
-def take_timelapse(interval, duration, imagestoragepath):
-    end_time = time.time() + duration
-    while time.time() < end_time:
-        #save_image(imagestoragepath)
-        time.sleep(interval)
+#def take_timelapse(interval, duration, imagestoragepath):
+ #   end_time = time.time() + duration
+  #  while time.time() < end_time:
+   #     #save_image(imagestoragepath)
+    #    time.sleep(interval)
 
 if __name__ == "__main__":
     picam2.start_recording(encoder, output)
