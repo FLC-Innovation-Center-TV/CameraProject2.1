@@ -31,11 +31,11 @@ print("define sizes for common displays")
 #         return file.readline().strip()
 
 def create_ffmpeg_command(stream_key):
-    return "-f flv rtmp://a.rtmp.youtube.com/live2/{}".format(stream_key)
+    return "-f flv rtmp://x.rtmp.youtube.com/live2/{}".format(stream_key)
 
 print("create ffmpeg command")
 
-stream_key = "d6w1-xaz9-szub-vy45-8rj0"
+stream_key = "dktr-20au-bqkh-3gac-cy62"
 ffmpeg_cmd = create_ffmpeg_command(stream_key)
 
 print("stream key")
