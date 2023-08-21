@@ -38,33 +38,33 @@ output = FfmpegOutput(ffmpeg_cmd, audio=True, audio_device="default", audio_sync
                       audio_samplerate=48000, audio_codec="aac", audio_bitrate=128000)
 
 # Image Storage Path (relative to the script's location)
-imagestoragepath = './timelapsestorage'  # Notice it's a relative path now
+#imagestoragepath = './timelapsestorage'  # Notice it's a relative path now
 
-def save_image(imagestoragepath):
-    now = datetime.now()
-    year, month, day = now.strftime('%Y'), now.strftime('%m'), now.strftime('%d')
-    save_directory = os.path.join(imagestoragepath, year, month, day)
-    os.makedirs(save_directory, exist_ok=True)
+#def save_image(imagestoragepath):
+    #now = datetime.now()
+    #year, month, day = now.strftime('%Y'), now.strftime('%m'), now.strftime('%d')
+    #save_directory = os.path.join(imagestoragepath, year, month, day)
+    #os.makedirs(save_directory, exist_ok=True)
     
-    timestamp = now.strftime('%Y%m%d_%H%M%S')
-    file_name = f"{timestamp}.jpg"
-    file_path = os.path.join(save_directory, file_name)
+    #timestamp = now.strftime('%Y%m%d_%H%M%S')
+    #file_name = f"{timestamp}.jpg"
+    #file_path = os.path.join(save_directory, file_name)
     
-    request = picam2.capture_request()
-    request.save("main", file_path)
-    request.release()
+    #request = picam2.capture_request()
+    #request.save("main", file_path)
+    #request.release()
 
-    return file_path
+    #return file_path
 
 def take_timelapse(interval, duration, imagestoragepath):
     end_time = time.time() + duration
     while time.time() < end_time:
-        save_image(imagestoragepath)
+        #save_image(imagestoragepath)
         time.sleep(interval)
 
 if __name__ == "__main__":
     picam2.start_recording(encoder, output)
     time.sleep(10)
-    take_timelapse(interval=15, duration=60*30, imagestoragepath=imagestoragepath)
+    #take_timelapse(interval=15, duration=60*30, imagestoragepath=imagestoragepath)
     time.sleep(9999999)
 
