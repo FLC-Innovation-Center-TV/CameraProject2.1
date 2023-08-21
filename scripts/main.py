@@ -88,7 +88,7 @@ print("output configured")
 if __name__ == "__main__":
     print("mainfunction entered")
     picam2.start_recording(encoder, output)
-    print("picam2 started recording
+    print("picam2 started recording")
     time.sleep(10)
     #take_timelapse(interval=15, duration=60*30, imagestoragepath=imagestoragepath)
     time.sleep(9999999)
