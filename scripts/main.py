@@ -48,7 +48,7 @@ print("picam2 intialized")
 chosen_display = "1080p"
 video_size = display_sizes[chosen_display]
 
-print("video size" + video_size)
+print("video size")
 picam2.configure(picam2.create_video_configuration(main={"size": video_size}))
 
 print("picam2 configured")
