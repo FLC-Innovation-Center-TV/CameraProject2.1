@@ -5,12 +5,9 @@ import time
 import os
 import psutil
 import logging
-import subprocess
-import cv2
-import glob
 from datetime import datetime
 from picamera2 import Picamera2
-from picamera2.encoders import H264Encoder, Quality
+from picamera2.encoders import H264Encoder
 from picamera2.outputs import FfmpegOutput
 from logging.handlers import RotatingFileHandler
 
@@ -19,17 +16,9 @@ print(f"Script ran at: {datetime.now()}")
 
 # Load config
 dir_path = os.path.dirname(os.path.realpath(__file__))
-info_path = os.path.join(dir_path,"..", "config", "info.json")
-
-
-with open(info_path) as f:
-    info = json.load(f)
 
 # Use the information from the config file
-stream_key = info['stream_key']
-bee_username = info['bee_username']
-bee_password = info['bee_password']
-bee_host = info['bee_host']
+stream_key = "d6w1-xaz9-szub-vy45-8rj0"
 
 class SystemHealthLogger:
     def __init__(self, log_file=os.path.join(dir_path, "..", 'logs', 'system_health.log'), log_level=logging.INFO, max_bytes=1e6, backup_count=10):
@@ -49,8 +38,6 @@ class SystemHealthLogger:
 
         handler.setFormatter(formatter)
         self.logger.addHandler(handler)
-    import json
-
 
     def get_system_health(self):
         """
@@ -73,10 +60,10 @@ class SystemHealthLogger:
         recv_bytes = net_io_stats.bytes_recv
 
         return {
-            'cpu_usage': cpu_usage, 
+            'cpu_usage': cpu_usage,
             'memory_usage': memory_usage,
             'disk_usage': disk_usage,
-            'sent_bytes': sent_bytes, 
+            'sent_bytes': sent_bytes,
             'recv_bytes': recv_bytes
         }
     
@@ -92,7 +79,6 @@ class SystemHealthLogger:
             self.logger.info(system_health)
             time.sleep(60)  # Log every 60 seconds
 
-
 class Camera:
     # Define sizes for common displays
     DISPLAY_SIZES = {
@@ -107,8 +93,6 @@ class Camera:
         self.chosen_display = chosen_display
         self.video_size = self.DISPLAY_SIZES[chosen_display]
         self.stream_key = stream_key
-        self.unuploaded = os.path.join(dir_path, "..", "timelapsestorage", "unuploaded")
-        self.uploaded = os.path.join(dir_path, "..", "timelapsestorage", "uploaded")
         self.picam2 = Picamera2()
 
     @staticmethod
@@ -116,147 +100,7 @@ class Camera:
         # This command will push a live stream to the specified YouTube RTMP URL
         return "-f flv rtmp://x.rtmp.youtube.com/live2/{}".format(stream_key)
 
-    def save_image(self):
-        """
-        Function to save image in the save directory with a timestamp.
-        """
-        # Use datetime to get current year, month, and day
-        now = datetime.now()
-        year, month, day = now.strftime('%Y'), now.strftime('%m'), now.strftime('%d')
-
-        # Append year, month, and day to your image storage path
-        save_directory = os.path.join(self.unuploaded, year, month, day)
-
-        # Create directory if it doesn't exist
-        os.makedirs(save_directory, exist_ok=True)
-        
-        timestamp = now.strftime('%Y%m%d_%H%M%S')  # e.g., '20230627_142536'
-        file_name = f"{timestamp}.jpg"
-        file_path = os.path.join(save_directory, file_name)
-        
-        # Capture and save image directly
-        request = self.picam2.capture_request()
-        request.save("main", file_path)
-        request.release()
-
-        return file_path
-    
-    def transfer_file(self, file_path, destination_path):
-        """
-        Transfer a file to the remote server.
-        """
-        newcommand = ["sshpass", "-p", bee_password, "scp", file_path, f"{bee_username}@{bee_host}:{destination_path}"]
-        completed_process = subprocess.run(newcommand, text=True, capture_output=True)
-        upload_successful = completed_process.returncode == 0
-
-        if upload_successful:
-            print(f"File {file_path} transferred successfully!")
-        else:
-            print(f"File transfer failed with the following error:\n{completed_process.stderr}")
-
-        return upload_successful
-
-    def upload_images(self):
-
-        unuploaded = self.unuploaded
-        uploaded = self.uploaded
-        destination_path = r"C:\Users\flcin\Documents"
-
-        for folder, _, images in os.walk(unuploaded):
-            for image_name in images:
-                image_path = os.path.join(folder, image_name)
-                if self.transfer_file(image_path, destination_path):
-                    date = os.path.relpath(folder, unuploaded)
-
-                    old_day_folder = os.path.join(unuploaded, date)
-                    new_day_folder = os.path.join(uploaded, date)
-
-                    new_image_path = os.path.join(new_day_folder, image_name)
-
-                    os.makedirs(new_day_folder, exist_ok=True)
-                    try:
-                        os.rename(image_path, new_image_path)
-                    except:
-                        print("Failed to transfer image to backup, likely because there's already an image with the exact same name.")
-                else:
-                    print(f"Image upload failed")
-
-    def take_timelapse(self, interval, logger_instance):
-        """
-        Function to capture images at regular intervals.
-        """
-        while True:
-            # Log system health
-            system_health = logger_instance.get_system_health()
-            logger_instance.logger.info(system_health)
-            
-            # Capture and save image
-            self.save_image()
-            self.upload_images()
-            
-            # Wait for the next capture
-            time.sleep(interval)
-
-    def compile_images_to_video(self, dir_to_compile):
-
-        framerate = 24 # frames per second 
-        
-        # Get the date from the directory name (assuming it ends with yyyy/mm/dd)
-        dir_date = dir_to_compile.split('/')[-3:]
-        date_str = "".join(dir_date)  # join year, month, day into a single string
-        
-        # Get all .jpg files from the directory
-        img_array = []
-        for filename in sorted(glob.glob(os.path.join(dir_to_compile, '*.jpg'))):
-            img = cv2.imread(filename)
-            height, width, layers = img.shape
-            size = (width,height)
-            img_array.append(img)
-
-        # Check if any .jpg files were found
-        if not img_array:
-            print(f"No images found in {dir_to_compile}. Skipping video compilation.")
-            return None  # or handle this situation differently if needed
-
-        # Specify the video name with date prefix and create a VideoWriter object
-        video_name = os.path.join(dir_to_compile, f'{date_str}_timelapse.mp4')
-        out = cv2.VideoWriter(video_name, cv2.VideoWriter_fourcc(*'MP4V'), framerate, size)
-        
-        for i in range(len(img_array)):
-            out.write(img_array[i])
-        out.release()
-
-        return video_name  # return the path of the created video for further use
-        
-    def finish(self):
-        #self.picam2.stop_recording()
-        
-        # Use datetime to get current year, month, and day
-        now = datetime.now()
-        year, month, day = now.strftime('%Y'), now.strftime('%m'), now.strftime('%d')
-
-        # Get the path for today's images
-        today_directory = os.path.join(self.uploaded, year, month, day)
-
-        # Compile images into a video
-        video_path = self.compile_images_to_video(today_directory)
-        print("done compiling")
-
-        # You may want to print or log the path of the created video
-        print(f"Created video at {video_path}")
-
-        destination_path = r"C:\Users\flcin\Documents"
-        if(self.transfer_file(video_path, destination_path)):
-            print("Video uploaded successfully")
-        else:
-            print("Video upload failed")
-
-        os.remove(video_path)
-        print("Deleted video from local storage")
-
-       
 if __name__ == "__main__":
-    timelapse_photo_interval = 10
     logger = SystemHealthLogger()
     camera = Camera(stream_key)
 
@@ -297,24 +141,24 @@ if __name__ == "__main__":
 
     # Log FfmpegOutput parameters
     logger.log_parameters({
-        "FFmpeg Command": ffmpeg_cmd, 
-        "Audio Device": ffmpeg_audio_device, 
-        "Audio Sync": ffmpeg_audio_sync, 
-        "Audio Sample Rate": ffmpeg_audio_samplerate, 
-        "Audio Codec": ffmpeg_audio_codec, 
+        "FFmpeg Command": ffmpeg_cmd,
+        "Audio Device": ffmpeg_audio_device,
+        "Audio Sync": ffmpeg_audio_sync,
+        "Audio Sample Rate": ffmpeg_audio_samplerate,
+        "Audio Codec": ffmpeg_audio_codec,
         "Audio Bitrate": ffmpeg_audio_bitrate
     })
 
     try:
         # start livestream
         camera.picam2.start_recording(encoder, output)
-        
-        camera.take_timelapse(interval=timelapse_photo_interval, logger_instance=logger)
+        logger.log_system_health()
             
     except KeyboardInterrupt:
         print(f"Interrupted by keyboard exception, stopping...")
     except Exception as e:
         print(f"Unexpected error: {e}")
     finally:
-        camera.finish()
+        camera.picam2.stop_recording()
+
         
