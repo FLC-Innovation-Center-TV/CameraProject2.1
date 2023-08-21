@@ -55,7 +55,7 @@ print("picam2 configured")
 encoder = H264Encoder(bitrate=4500000, repeat=True, iperiod=40)
 
 print("encoder configured")
-output = FfmpegOutput(ffmpeg_cmd, audio=True, audio_device="default", audio_sync=-0.3, 
+output = FfmpegOutput(ffmpeg_cmd, audio=False, audio_device="default", audio_sync=-0.3, 
                       audio_samplerate=48000, audio_codec="aac", audio_bitrate=128000)
 
 print("output configured")
