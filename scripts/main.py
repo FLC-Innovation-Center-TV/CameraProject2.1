@@ -32,7 +32,8 @@ print("define sizes for common displays")
 
 def create_ffmpeg_command(stream_key):
     return "-f flv rtmp://x.rtmp.youtube.com/live2/{}".format(stream_key)
-
+#rtmp://x.rtmp.youtube.com/live2
+#dktr-20au-bqkh-3gac-cy62
 print("create ffmpeg command")
 
 stream_key = "dktr-20au-bqkh-3gac-cy62"
